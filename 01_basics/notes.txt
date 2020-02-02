@@ -1,0 +1,45 @@
+i
+
+
+models of computing
+    - all models can represent each other
+RAM model
+    Real world uses RAM model
+    RAM model >= other models because it can implement the others
+    faster than others
+Pointer Model
+Lisp Model
+
+
+ADT - Abstract Data Type
+    not a data structure - defines the interface.
+    independent of the implementation
+    eg. - Queue - Enqueue(Q, e), Dequeue(Q)
+          Stacks - Push(S,e) Pop(S)
+          Dicts - Insert(D, key, val) Retrieve(D, key)
+          Priority Queue - Insert(Pq, e) Extract-Max(Pq)
+          Set - Add(S,e) Remove(S,e) Exists(S,e)
+          List - Insert(L, e, index), Get(L, ind) Remove(L, ind)
+
+
+proving correctness
+    loop invariant - prove three statements, proof by induction
+        1 - some invariant holds on first execution
+        2 - maintenance, if invariant is held on all previous loops, it holds on current pass
+        3 - termination, if the invariant holds at the end,
+
+
+O notation
+    big O, little o
+    big Omega, little omega
+    theta
+
+    O <=
+    o <
+    Omega >=
+    omage >=
+    theta, both
+
+
+
+
