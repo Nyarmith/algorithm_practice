@@ -1,5 +1,3 @@
-
-
 #include <string>
 #include <utility>
 #include <iostream>
@@ -8,7 +6,7 @@ template <class T>
 struct Node
 {
     T data;
-    Node<T> *nextNode;
+    Node<T> *next;
 };
 
 template <class T>
@@ -16,9 +14,9 @@ class LinkedList
 {
 public:
 
-    LinkedList() : firstNode(nullptr), listSize(0) {}
+    LinkedList() : first_(nullptr), size_(0) {}
 
-    LinkedList(const LinkedList<T> &origList) : firstNode(nullptr), listSize(0)
+    LinkedList(const LinkedList<T> &origList) : first_(nullptr), size_(0)
     {
         insert(origList, 0);
     }
@@ -32,15 +30,15 @@ public:
         // if inserting in the first spot, move reference to first node
         if (nodes.first == nullptr)
         {
-            firstNode = node;
+            first_ = node;
         }
         else
         {
-            nodes.first->nextNode = node;
+            nodes.first->next = node;
         }
 
-        node->nextNode = nodes.second;
-        ++listSize;
+        node->next = nodes.second;
+        ++size_;
         nodes = findNode(index);
         return;
     }
@@ -48,23 +46,23 @@ public:
     void insert(const LinkedList<T> &origList, const size_t index)
     {
 
-        auto origNode = origList.firstNode;
+        auto origNode = origList.first_;
         auto nodes{findNode(index)};
         auto prevNode{nodes.first};
 
         while (origNode != nullptr)
         {
             auto node = new Node<T>{origNode->data, nodes.second};
-            ++listSize;
+            ++size_;
             if (prevNode == nullptr)
             {
-                firstNode = node;
+                first_ = node;
             }
             else
             {
-                prevNode->nextNode = node;
+                prevNode->next = node;
             }
-            origNode = origNode->nextNode;
+            origNode = origNode->next;
             prevNode = node;
         }
 
@@ -85,23 +83,23 @@ public:
 
         if (nodes.first == nullptr)
         {
-            // removing firstNode, so no node points to it
-            firstNode = nodes.second->nextNode;
+            // removing first_, so no node points to it
+            first_ = nodes.second->next;
         }
         else
         {
             // removing any other node, including final node
-            nodes.first->nextNode = nodes.second->nextNode;
+            nodes.first->next = nodes.second->next;
         }
 
         delete nodes.second;
-        --listSize;
+        --size_;
         return;
     }
 
     size_t size() const
     {
-        return listSize;
+        return size_;
     }
 
     T &operator[] (const size_t index)
@@ -112,12 +110,12 @@ public:
 
     ~LinkedList()
     {
-        auto node{firstNode};
+        auto node{first_};
         while (node != nullptr)
         {
-            auto nextNode{node->nextNode};
+            auto next{node->next};
             delete node;
-            node = nextNode;
+            node = next;
         }
     }
 
@@ -126,12 +124,12 @@ public:
 
 
 private:
-    Node<T> *firstNode;
-    size_t listSize;
+    Node<T> *first_;
+    size_t size_;
 
     std::pair<Node<T>*, Node<T>*> findNode(const size_t index) const
     {
-        auto node{firstNode};
+        auto node{first_};
         Node<T> *prevNode{nullptr};
 
         for(size_t i = 0 ; i < index ; i++)
@@ -141,7 +139,7 @@ private:
                 throw std::runtime_error("LinkedList index " + std::to_string(index) + " out of range");
             }
             prevNode = node;
-            node = node->nextNode;
+            node = node->next;
         }
 
         return std::make_pair(prevNode, node);
@@ -152,12 +150,15 @@ private:
 template <class T>
 std::ostream& operator<<(std::ostream& os, const LinkedList<T> &list)
 {
-    auto curNode{list.firstNode};
+    auto curNode{list.first_};
     os << "{ ";
     while (curNode != nullptr)
     {
-        os << curNode->data << ", ";
-        curNode = curNode->nextNode;
+        if (curNode != list.first_)
+            os << ", ";
+
+        os << curNode->data;
+        curNode = curNode->next;
     }
     os << " }";
     return os;
